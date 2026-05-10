@@ -131,7 +131,7 @@ Mahesh through the links in the Contact section.
 If someone asks how to reach Mahesh, direct them to the Contact section of the
 portfolio. The following links are available there:
 
-- Email: contact@yourdomain.com (alias — forwards to his real inbox)
+- Email: contact-me@mahesh-cheemalapati.com (alias — forwards to his real inbox)
 - LinkedIn: https://www.linkedin.com/in/mahesh-cheemalapati
 - GitHub: https://github.com/Mahesh-Cheemalapati
 - Blog: https://dev.to/mcheemalapati

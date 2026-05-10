@@ -10,8 +10,8 @@ export const contactLinks: ContactLink[] = [
   {
     id: 'email',
     label: 'Email',
-    value: 'contact@yourdomain.com',
-    href: 'mailto:contact@yourdomain.com',
+    value: 'contact-me@mahesh-cheemalapati.com',
+    href: 'mailto:contact-me@mahesh-cheemalapati.com',
     icon: '✉',
   },
   {
