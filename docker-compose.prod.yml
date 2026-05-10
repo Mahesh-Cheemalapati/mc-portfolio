@@ -11,6 +11,7 @@ services:
       - REDIS_URL=redis://redis:6379
     networks:
       - portfolio-network
+      - nginx-proxy
     depends_on:
       - redis
     restart: always
@@ -24,9 +25,10 @@ services:
       context: .
       dockerfile: docker/Dockerfile.web
       args:
-        - PUBLIC_API_URL=
+        - PUBLIC_API_URL=https://api.mahesh-cheemalapati.com
     networks:
       - portfolio-network
+      - nginx-proxy
     restart: always
     deploy:
       resources:
@@ -55,6 +57,8 @@ services:
 networks:
   portfolio-network:
     driver: bridge
+  nginx-proxy:
+    external: true
 
 volumes:
   redis-data:
