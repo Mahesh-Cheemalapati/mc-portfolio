@@ -1,0 +1,53 @@
+version: "3.9"
+
+networks:
+  portfolio-network:
+    driver: bridge
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    ports:
+      - "3001:3001"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PINECONE_API_KEY=${PINECONE_API_KEY}
+      - PINECONE_INDEX=${PINECONE_INDEX}
+      - PINECONE_ENVIRONMENT=${PINECONE_ENVIRONMENT}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379}
+      - RATE_LIMIT_MAX=${RATE_LIMIT_MAX:-25}
+      - RATE_LIMIT_WINDOW_SECONDS=${RATE_LIMIT_WINDOW_SECONDS:-86400}
+      - INGEST_SECRET=${INGEST_SECRET}
+      - API_PORT=${API_PORT:-3001}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+    volumes:
+      - ./apps/api/src:/app/src
+    depends_on:
+      - redis
+    mem_limit: 512m
+    networks:
+      - portfolio-network
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    ports:
+      - "3000:3000"
+    mem_limit: 128m
+    networks:
+      - portfolio-network
+
+  redis:
+    image: redis:alpine
+    platform: linux/arm64
+    command: redis-server --save 60 1
+    mem_limit: 128m
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - portfolio-network

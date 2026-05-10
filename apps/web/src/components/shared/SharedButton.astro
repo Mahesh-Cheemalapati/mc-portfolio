@@ -1,0 +1,19 @@
+---
+interface Props {
+  href?: string
+  variant: 'solid' | 'outline'
+  text: string
+}
+
+const { href, variant, text } = Astro.props
+---
+
+{
+  href ? (
+    <a href={href} class={`shared-btn shared-btn--${variant}`}>
+      {text}
+    </a>
+  ) : (
+    <button class={`shared-btn shared-btn--${variant}`}>{text}</button>
+  )
+}

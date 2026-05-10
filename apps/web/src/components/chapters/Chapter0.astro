@@ -1,0 +1,74 @@
+---
+import type { ChapterConfig } from '@content/data/chapters'
+import EpisodeCard from '../shared/EpisodeCard.astro'
+import StatRow from '../shared/StatRow.astro'
+
+interface Props {
+  chapter: ChapterConfig
+  narrativeHtml: string
+}
+
+const { chapter, narrativeHtml } = Astro.props
+
+const stats = [
+  { metric: '9+', label: 'Years in the field' },
+  { metric: '50%', label: 'Load time defeated' },
+  { metric: '15+', label: 'Squads united' },
+  { metric: '∞', label: 'Problems solved' },
+]
+---
+
+<div class="page-inner page-inner--hero">
+  <span class="panel-mark tl" aria-hidden="true"></span>
+  <span class="panel-mark tr" aria-hidden="true"></span>
+  <span class="panel-mark bl" aria-hidden="true"></span>
+  <span class="panel-mark br" aria-hidden="true"></span>
+  <span class="bg-jp" aria-hidden="true">{chapter.bgJpText}</span>
+
+  <EpisodeCard
+    number={chapter.id}
+    series={chapter.series}
+    title={chapter.episodeTitle}
+    subtitle={chapter.episodeSubtitle}
+  />
+
+  <div class="narrative-content rev">
+    <Fragment set:html={narrativeHtml} />
+  </div>
+
+  <StatRow stats={stats} />
+
+  <div class="human-note rev" style="transition-delay: 200ms">
+    <p>
+      Started as a teacher. Still thinks that way — about clarity, about
+      making hard things understandable, about leaving things better than
+      they were found. Nine years of engineering built on top of that.
+    </p>
+    <p style="margin-top: 12px">
+      Currently moving into AI. Curious by nature. Homelab in progress.
+      Anime nerd. Always building something.
+    </p>
+  </div>
+
+  <div class="hero-cta rev">
+    <button class="shared-btn shared-btn--solid" data-page="1">Read the Story</button>
+    <button class="shared-btn shared-btn--outline" data-action="open-chat">Chat with AI-MC</button>
+  </div>
+</div>
+
+<script>
+  import { navigateTo } from '../../stores/bookStore'
+  import { toggleChat } from '../../stores/chatStore'
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+    const pageBtn = target.closest<HTMLElement>('[data-page]')
+    if (pageBtn) {
+      navigateTo(parseInt(pageBtn.dataset.page ?? '0', 10))
+      return
+    }
+    if (target.closest('[data-action="open-chat"]')) {
+      toggleChat()
+    }
+  })
+</script>

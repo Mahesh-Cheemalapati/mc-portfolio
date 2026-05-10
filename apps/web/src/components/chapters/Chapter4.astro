@@ -1,0 +1,33 @@
+---
+import type { ChapterConfig } from '@content/data/chapters'
+
+interface Props {
+  chapter: ChapterConfig
+  narrativeHtml: string
+}
+
+const { chapter, narrativeHtml } = Astro.props
+---
+
+<div class="page-inner page-inner--bonus">
+  <span class="panel-mark tl" aria-hidden="true"></span>
+  <span class="panel-mark tr" aria-hidden="true"></span>
+  <span class="panel-mark bl" aria-hidden="true"></span>
+  <span class="panel-mark br" aria-hidden="true"></span>
+  <span class="bg-jp" aria-hidden="true">{chapter.bgJpText}</span>
+
+  <header class="episode-card rev">
+    <div class="episode-card__meta">
+      <span class="episode-card__num">✦</span>
+      <span class="episode-card__series">{chapter.series}</span>
+    </div>
+    <h1 class="episode-card__title">{chapter.episodeTitle}</h1>
+    <p class="episode-card__subtitle">{chapter.episodeSubtitle}</p>
+  </header>
+
+  <div class="narrative-content narrative-content--bonus rev">
+    <Fragment set:html={narrativeHtml} />
+  </div>
+
+  <p class="bonus-footer rev">Thanks for reading.</p>
+</div>

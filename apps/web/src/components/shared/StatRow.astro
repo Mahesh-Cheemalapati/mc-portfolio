@@ -1,0 +1,18 @@
+---
+import StatBox from './StatBox.astro'
+
+interface Stat {
+  metric: string
+  label: string
+}
+
+interface Props {
+  stats: Stat[]
+}
+
+const { stats } = Astro.props
+---
+
+<div class="stat-row rev">
+  {stats.map((s) => <StatBox metric={s.metric} label={s.label} />)}
+</div>

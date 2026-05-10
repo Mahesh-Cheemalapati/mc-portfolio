@@ -1,0 +1,60 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+      platforms:
+        - linux/arm64
+    env_file: .env
+    environment:
+      - ENVIRONMENT=production
+      - REDIS_URL=redis://redis:6379
+    networks:
+      - portfolio-network
+    depends_on:
+      - redis
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+      args:
+        - PUBLIC_API_URL=
+    networks:
+      - portfolio-network
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+
+  redis:
+    image: redis:alpine
+    platform: linux/arm64
+    networks:
+      - portfolio-network
+    restart: always
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis-data:/data
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+
+networks:
+  portfolio-network:
+    driver: bridge
+
+volumes:
+  redis-data:

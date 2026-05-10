@@ -1,0 +1,19 @@
+---
+interface Props {
+  number: number
+  series: string
+  title: string
+  subtitle: string
+}
+
+const { number, series, title, subtitle } = Astro.props
+---
+
+<header class="episode-card rev">
+  <div class="episode-card__meta">
+    <span class="episode-card__num">EP. {String(number).padStart(2, '0')}</span>
+    <span class="episode-card__series">{series}</span>
+  </div>
+  <h1 class="episode-card__title">{title}</h1>
+  <p class="episode-card__subtitle">{subtitle}</p>
+</header>

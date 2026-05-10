@@ -1,0 +1,18 @@
+---
+interface Props {
+  icon: string
+  title: string
+  text: string
+}
+
+const { icon, title, text } = Astro.props
+---
+
+<div class="beat-item rev">
+  <span class="beat-item__icon" aria-hidden="true">{icon}</span>
+  <div class="beat-item__body">
+    <p class="beat-item__title">{title}</p>
+    <p class="beat-item__text">{text}</p>
+    <slot />
+  </div>
+</div>

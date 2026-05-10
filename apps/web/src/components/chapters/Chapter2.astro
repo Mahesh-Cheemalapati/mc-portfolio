@@ -1,0 +1,47 @@
+---
+import type { ChapterConfig } from '@content/data/chapters'
+import { skillGroups } from '@content/data/skills'
+import EpisodeCard from '../shared/EpisodeCard.astro'
+
+interface Props {
+  chapter: ChapterConfig
+  narrativeHtml: string
+}
+
+const { chapter, narrativeHtml } = Astro.props
+---
+
+<div class="page-inner page-inner--skills">
+  <span class="panel-mark tl" aria-hidden="true"></span>
+  <span class="panel-mark tr" aria-hidden="true"></span>
+  <span class="panel-mark bl" aria-hidden="true"></span>
+  <span class="panel-mark br" aria-hidden="true"></span>
+  <span class="bg-jp" aria-hidden="true">{chapter.bgJpText}</span>
+
+  <EpisodeCard
+    number={chapter.id}
+    series={chapter.series}
+    title={chapter.episodeTitle}
+    subtitle={chapter.episodeSubtitle}
+  />
+
+  <div class="narrative-content rev">
+    <Fragment set:html={narrativeHtml} />
+  </div>
+
+  <div class="skill-groups">
+    {
+      skillGroups.map((group, gi) => (
+        <div class="skill-group rev" style={`transition-delay: ${gi * 80}ms`}>
+          <h3 class="skill-group__title">{group.category}</h3>
+          {group.skills.map((skill, si) => (
+            <div class="skill-row" style={`--w: ${75 + ((si * 7 + gi * 3) % 20)}%`}>
+              <span>{skill}</span>
+              <span class="skill-dot" aria-hidden="true"></span>
+            </div>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>

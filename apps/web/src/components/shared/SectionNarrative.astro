@@ -1,0 +1,15 @@
+---
+interface Props {
+  text: string
+  delay?: number
+}
+
+const { text, delay = 0 } = Astro.props
+---
+
+<p
+  class="section-narrative rev"
+  style={delay > 0 ? `transition-delay: ${delay}ms` : undefined}
+>
+  {text}
+</p>

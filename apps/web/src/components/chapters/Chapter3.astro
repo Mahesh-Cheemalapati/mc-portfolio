@@ -1,0 +1,53 @@
+---
+import type { ChapterConfig } from '@content/data/chapters'
+import { contactLinks } from '@content/data/contact'
+import EpisodeCard from '../shared/EpisodeCard.astro'
+
+interface Props {
+  chapter: ChapterConfig
+  narrativeHtml: string
+}
+
+const { chapter, narrativeHtml } = Astro.props
+---
+
+<div class="page-inner page-inner--contact">
+  <span class="panel-mark tl" aria-hidden="true"></span>
+  <span class="panel-mark tr" aria-hidden="true"></span>
+  <span class="panel-mark bl" aria-hidden="true"></span>
+  <span class="panel-mark br" aria-hidden="true"></span>
+  <span class="bg-jp" aria-hidden="true">{chapter.bgJpText}</span>
+
+  <EpisodeCard
+    number={chapter.id}
+    series={chapter.series}
+    title={chapter.episodeTitle}
+    subtitle={chapter.episodeSubtitle}
+  />
+
+  <div class="narrative-content rev">
+    <Fragment set:html={narrativeHtml} />
+  </div>
+
+  <p class="contact-nudge rev">Have questions? Ask AI-MC — the button is always in the bottom right.</p>
+
+  <div class="contact-grid rev">
+    {
+      contactLinks.map((link) => (
+        <a
+          href={link.href}
+          class={`contact-cell${link.id === 'resume' ? ' resume' : ''}`}
+          style={link.id === 'resume' ? 'grid-column: span 2' : undefined}
+          target={link.href.startsWith('mailto:') ? undefined : '_blank'}
+          rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        >
+          <span class="contact-cell__icon" aria-hidden="true">{link.icon}</span>
+          <div>
+            <div class="contact-cell__label">{link.label}</div>
+            <div class="contact-cell__value">{link.value}</div>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</div>

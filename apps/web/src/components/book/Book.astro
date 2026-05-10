@@ -1,0 +1,53 @@
+---
+import { chapters } from '@content/data/chapters'
+import Chapter0 from '../chapters/Chapter0.astro'
+import Chapter1 from '../chapters/Chapter1.astro'
+import Chapter2 from '../chapters/Chapter2.astro'
+import Chapter3 from '../chapters/Chapter3.astro'
+import Chapter4 from '../chapters/Chapter4.astro'
+import BookClient from './BookClient'
+import PageFlip from './PageFlip'
+import ThemeProvider from '../theme/ThemeProvider'
+import Cursor from '../ui/Cursor'
+import PageIndicator from '../ui/PageIndicator'
+import ChatWidget from '../ui/ChatWidget'
+
+const chapterFiles = await Astro.glob('../../../../../content/chapters/*.md')
+const narratives = chapterFiles.reduce(
+  (acc, file) => {
+    const slug = file.file.split('/').pop()?.replace('.md', '') ?? ''
+    acc[slug] = file.compiledContent()
+    return acc
+  },
+  {} as Record<string, string>,
+)
+---
+
+<div class="book" role="main">
+  <div class="page active" id="page-0" data-page-index="0">
+    <Chapter0 chapter={chapters[0]!} narrativeHtml={narratives['ch00'] ?? ''} />
+  </div>
+
+  <div class="page" id="page-1" data-page-index="1">
+    <Chapter1 chapter={chapters[1]!} narrativeHtml={narratives['ch01'] ?? ''} />
+  </div>
+
+  <div class="page" id="page-2" data-page-index="2">
+    <Chapter2 chapter={chapters[2]!} narrativeHtml={narratives['ch02'] ?? ''} />
+  </div>
+
+  <div class="page" id="page-3" data-page-index="3">
+    <Chapter3 chapter={chapters[3]!} narrativeHtml={narratives['ch03'] ?? ''} />
+  </div>
+
+  <div class="page" id="page-4" data-page-index="4">
+    <Chapter4 chapter={chapters[4]!} narrativeHtml={narratives['ch04'] ?? ''} />
+  </div>
+</div>
+
+<ThemeProvider client:load />
+<Cursor client:load />
+<PageIndicator client:load />
+<ChatWidget client:load />
+<BookClient client:load />
+<PageFlip client:load />

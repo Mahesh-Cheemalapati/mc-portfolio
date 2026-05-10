@@ -1,0 +1,71 @@
+---
+import type { ChapterConfig } from '@content/data/chapters'
+import { projects } from '@content/data/projects'
+import EpisodeCard from '../shared/EpisodeCard.astro'
+
+interface Props {
+  chapter: ChapterConfig
+  narrativeHtml: string
+}
+
+const { chapter, narrativeHtml } = Astro.props
+
+const featured = projects.filter((p) => p.featured)
+const rest = projects.filter((p) => !p.featured)
+---
+
+<div class="page-inner page-inner--work">
+  <span class="panel-mark tl" aria-hidden="true"></span>
+  <span class="panel-mark tr" aria-hidden="true"></span>
+  <span class="panel-mark bl" aria-hidden="true"></span>
+  <span class="panel-mark br" aria-hidden="true"></span>
+  <span class="bg-jp" aria-hidden="true">{chapter.bgJpText}</span>
+
+  <EpisodeCard
+    number={chapter.id}
+    series={chapter.series}
+    title={chapter.episodeTitle}
+    subtitle={chapter.episodeSubtitle}
+  />
+
+  <div class="narrative-content rev">
+    <Fragment set:html={narrativeHtml} />
+  </div>
+
+  <div class="project-grid">
+    {
+      featured.map((p, i) => (
+        <article class="project-card rev" style={`transition-delay: ${i * 80}ms`}>
+          <div class="project-metric">{p.impact.metric}</div>
+          <div class="project-metric-label">{p.impact.label}</div>
+          <h2 class="project-title">{p.title}</h2>
+          <p class="project-narrative">{p.narrative}</p>
+          <div class="tech-tags">
+            {p.technologies.map((t) => (
+              <span class="tech-tag">{t}</span>
+            ))}
+          </div>
+        </article>
+      ))
+    }
+  </div>
+
+  {
+    rest.length > 0 && (
+      <>
+        <hr class="section-divider" />
+        <ul class="project-compact-list">
+          {rest.map((p) => (
+            <li class="project-compact-item rev">
+              <span class="project-compact-metric">{p.impact.metric}</span>
+              <span class="project-compact-title">{p.title}</span>
+              <span class="project-compact-year">
+                {typeof p.year === 'string' ? p.year : `${p.year.from}–${p.year.to}`}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+</div>
