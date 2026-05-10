@@ -39,7 +39,7 @@ export const contactLinks: ContactLink[] = [
     id: 'resume',
     label: 'Resume',
     value: 'Download PDF',
-    href: '/resume.pdf',
+    href: '/mc_resume.pdf',
     icon: '↓',
   },
 ]
