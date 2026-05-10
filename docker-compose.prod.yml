@@ -5,10 +5,13 @@ services:
       dockerfile: docker/Dockerfile.api
       platforms:
         - linux/arm64
-    env_file: .env
+    env_file: 
+        - .env
+        - apps/api/.env
     environment:
       - ENVIRONMENT=production
       - REDIS_URL=redis://redis:6379
+      - DOMAIN=mahesh-cheemalapati.com
     networks:
       - portfolio-network
       - nginx-proxy
