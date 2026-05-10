@@ -1,6 +1,6 @@
 FROM node:20-alpine AS builder
 WORKDIR /repo
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 COPY apps/web/package.json apps/web/pnpm-lock.yaml ./apps/web/
 RUN cd apps/web && pnpm install --frozen-lockfile
 COPY apps/web/ ./apps/web/
@@ -8,7 +8,6 @@ COPY content/ ./content/
 ARG PUBLIC_API_URL=
 ENV PUBLIC_API_URL=$PUBLIC_API_URL
 RUN cd apps/web && pnpm build
-
 FROM node:20-alpine AS runtime
 WORKDIR /app
 RUN npm install -g serve
