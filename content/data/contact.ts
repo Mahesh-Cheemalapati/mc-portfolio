@@ -4,6 +4,7 @@ export interface ContactLink {
   value: string
   href: string
   icon: string
+  download?: boolean
 }
 
 export const contactLinks: ContactLink[] = [
@@ -41,5 +42,6 @@ export const contactLinks: ContactLink[] = [
     value: 'Download PDF',
     href: '/mc_resume.pdf',
     icon: '↓',
+    download: true,
   },
 ]

@@ -38,8 +38,9 @@ const { chapter, narrativeHtml } = Astro.props
           href={link.href}
           class={`contact-cell${link.id === 'resume' ? ' resume' : ''}`}
           style={link.id === 'resume' ? 'grid-column: span 2' : undefined}
-          target={link.href.startsWith('mailto:') ? undefined : '_blank'}
-          rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          target={link.download ? '_self' : link.href.startsWith('mailto:') ? undefined : '_blank'}
+          rel={link.download ? undefined : link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          download={link.download ? 'Mahesh_Cheemalapati_Resume.pdf' : undefined}
         >
           <span class="contact-cell__icon" aria-hidden="true">{link.icon}</span>
           <div>

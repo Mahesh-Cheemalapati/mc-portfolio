@@ -5,12 +5,14 @@ COPY apps/web/package.json apps/web/pnpm-lock.yaml ./apps/web/
 RUN cd apps/web && pnpm install --frozen-lockfile
 COPY apps/web/ ./apps/web/
 COPY content/ ./content/
+RUN ls apps/web/public/mc_resume.pdf || (echo "ERROR: mc_resume.pdf missing from apps/web/public/" && exit 1)
 ARG PUBLIC_API_URL=
 ENV PUBLIC_API_URL=$PUBLIC_API_URL
 RUN cd apps/web && pnpm build
+RUN ls apps/web/dist/mc_resume.pdf || (echo "ERROR: mc_resume.pdf not in dist/" && exit 1)
 FROM node:20-alpine AS runtime
 WORKDIR /app
 RUN npm install -g serve
 COPY --from=builder /repo/apps/web/dist ./dist
 EXPOSE 3000
-CMD ["serve", "dist", "-l", "3000"]
+CMD ["serve", "dist", "-l", "3000", "--no-clipboard"]

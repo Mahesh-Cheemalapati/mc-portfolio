@@ -85,6 +85,9 @@ export function usePageNavigation(
     }
 
     const handleWheel = (e: WheelEvent): void => {
+      const chatPanel = document.getElementById('chat-panel')
+      if (chatPanel && chatPanel.contains(e.target as Node)) return
+
       if (isFlippingRef.current || postFlipCooldown.current) {
         e.preventDefault()
         accDelta.current = 0

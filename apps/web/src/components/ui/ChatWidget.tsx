@@ -58,6 +58,7 @@ export default function ChatWidget() {
 
       {/* slide-up panel */}
       <div
+        id="chat-panel"
         className={`chat-panel${open ? ' open' : ''}`}
         role="dialog"
         aria-label="Chat with AI-MC"
