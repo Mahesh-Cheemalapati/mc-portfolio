@@ -3,7 +3,11 @@ import type { ChatMessage } from '../stores/chatStore'
 
 const API_BASE = import.meta.env.PUBLIC_API_URL ?? ''
 
-async function runTypewriter(text: string, msgIndex: number): Promise<void> {
+async function runTypewriter(
+  text: string,
+  msgIndex: number,
+  onTick?: () => void,
+): Promise<void> {
   let displayed = ''
   for (const char of text) {
     displayed += char
@@ -14,11 +18,15 @@ async function runTypewriter(text: string, msgIndex: number): Promise<void> {
       updated[msgIndex] = { ...target, content: displayed }
       messages.set(updated)
     }
+    if (onTick) onTick()
     await new Promise<void>((resolve) => setTimeout(resolve, 18))
   }
 }
 
-export async function sendMessage(question: string): Promise<void> {
+export async function sendMessage(
+  question: string,
+  onTypewriterTick?: () => void,
+): Promise<void> {
   if (isLoading.get()) return
 
   const userMsg: ChatMessage = { role: 'user', content: question }
@@ -52,7 +60,7 @@ export async function sendMessage(question: string): Promise<void> {
     const msgIndex = withAssistant.length - 1
 
     isLoading.set(false)
-    await runTypewriter(data.answer, msgIndex)
+    await runTypewriter(data.answer, msgIndex, onTypewriterTick)
   } catch {
     chatError.set('Something went wrong. Please try again.')
     isLoading.set(false)
@@ -60,13 +68,13 @@ export async function sendMessage(question: string): Promise<void> {
 }
 
 export interface UseChatResult {
-  send: (question: string) => Promise<void>
+  send: (question: string, onTick?: () => void) => Promise<void>
   clear: () => void
 }
 
 export function useChat(): UseChatResult {
-  const send = async (question: string): Promise<void> => {
-    await sendMessage(question)
+  const send = async (question: string, onTick?: () => void): Promise<void> => {
+    await sendMessage(question, onTick)
   }
 
   const clear = (): void => {

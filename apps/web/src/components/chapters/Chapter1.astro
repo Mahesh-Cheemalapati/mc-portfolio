@@ -11,7 +11,6 @@ interface Props {
 const { chapter, narrativeHtml } = Astro.props
 
 const featured = projects.filter((p) => p.featured)
-const rest = projects.filter((p) => !p.featured)
 ---
 
 <div class="page-inner page-inner--work">
@@ -50,22 +49,4 @@ const rest = projects.filter((p) => !p.featured)
     }
   </div>
 
-  {
-    rest.length > 0 && (
-      <>
-        <hr class="section-divider" />
-        <ul class="project-compact-list">
-          {rest.map((p) => (
-            <li class="project-compact-item rev">
-              <span class="project-compact-metric">{p.impact.metric}</span>
-              <span class="project-compact-title">{p.title}</span>
-              <span class="project-compact-year">
-                {typeof p.year === 'string' ? p.year : `${p.year.from}–${p.year.to}`}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </>
-    )
-  }
 </div>

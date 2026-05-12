@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useChat } from '../../hooks/useChat'
 import { chatError, isChatOpen, isLoading, messages, toggleChat } from '../../stores/chatStore'
 import type { StarterQuestion } from './ChatWidget.types'
@@ -30,14 +30,26 @@ export default function ChatWidget() {
   const errMsg = useStore(chatError)
   const [input, setInput] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const chatBodyRef = useRef<HTMLDivElement>(null)
   const { send } = useChat()
+
+  const scrollToBottom = (smooth: boolean = true): void => {
+    if (!chatBodyRef.current) return
+    chatBodyRef.current.scrollTo({
+      top: chatBodyRef.current.scrollHeight,
+      behavior: smooth ? 'smooth' : 'instant',
+    })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [msgs, loading]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const submit = async (question: string): Promise<void> => {
     if (!question.trim() || loading) return
     setInput('')
-    await send(question.trim())
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    setTimeout(() => scrollToBottom(false), 50)
+    await send(question.trim(), () => scrollToBottom(true))
   }
 
   const handleKey = (e: React.KeyboardEvent<HTMLInputElement>): void => {
@@ -71,7 +83,11 @@ export default function ChatWidget() {
           </button>
         </div>
 
-        <div className="chat-panel__body" style={{ maxHeight: '320px', overflowY: 'auto' }}>
+        <div
+          ref={chatBodyRef}
+          className="chat-panel__body"
+          style={{ maxHeight: '320px', overflowY: 'auto', scrollBehavior: 'smooth' }}
+        >
           {msgs.length === 0 ? (
             <div className="chat-opening">
               <p className="chat-opening__text">{OPENING}</p>
@@ -101,7 +117,6 @@ export default function ChatWidget() {
                 </div>
               )}
               {errMsg && <p className="chat-error">{errMsg}</p>}
-              <div ref={bottomRef} />
             </div>
           )}
         </div>

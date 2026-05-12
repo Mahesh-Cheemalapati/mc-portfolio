@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { bonusUnlocked, currentPage, navigateTo } from '../stores/bookStore'
 
-export const WHEEL_THRESHOLD = 180
+export const WHEEL_THRESHOLD = 280
 export const FLIP_LOCK_MS = 850
-const RESET_MS = 500
+const RESET_MS = 800
 const POST_FLIP_COOLDOWN_MS = 400
 const REVERSE_FLIP_GUARD_MS = 1200
 
@@ -95,32 +95,40 @@ export function usePageNavigation(
 
       if (isFlippingRef.current || postFlipCooldown.current) {
         e.preventDefault()
-        accDelta.current = 0
         return
       }
 
       const el = getActiveElRef.current()
-      if (e.deltaY > 0 && !isAtBottom(el)) {
-        accDelta.current = 0
-        return
-      }
-      if (e.deltaY < 0 && !isAtTop(el)) {
-        accDelta.current = 0
-        return
-      }
+      const scrollTop = el ? Math.round(el.scrollTop) : 0
+      const scrollHeight = el ? Math.round(el.scrollHeight) : 0
+      const clientHeight = el ? Math.round(el.clientHeight) : 0
+      const atTop = el === null || scrollTop === 0
+      const atBottom = el === null || scrollTop + clientHeight >= scrollHeight
+      const isFlat = el === null || scrollHeight <= clientHeight + 2
 
-      accDelta.current += e.deltaY
+      const goingDown = e.deltaY > 0
+      const goingUp = e.deltaY < 0
+
+      if (goingDown && !atBottom && !isFlat) { accDelta.current = 0; return }
+      if (goingUp && !atTop && !isFlat) { accDelta.current = 0; return }
+
+      e.preventDefault()
+
+      if (goingDown && (atBottom || isFlat)) accDelta.current += e.deltaY
+      else if (goingUp && (atTop || isFlat)) accDelta.current += e.deltaY
+
       if (resetTimer.current) clearTimeout(resetTimer.current)
-      resetTimer.current = setTimeout(() => {
-        accDelta.current = 0
-      }, RESET_MS)
+      resetTimer.current = setTimeout(() => { accDelta.current = 0 }, RESET_MS)
 
-      const dir = computeFlipDirection(accDelta.current)
-      if (dir) {
+      const idx = currentPage.get()
+      if (accDelta.current > WHEEL_THRESHOLD) {
         accDelta.current = 0
         if (resetTimer.current) clearTimeout(resetTimer.current)
-        const idx = currentPage.get()
-        goTo(dir === 'forward' ? idx + 1 : idx - 1)
+        goTo(idx + 1)
+      } else if (accDelta.current < -WHEEL_THRESHOLD) {
+        accDelta.current = 0
+        if (resetTimer.current) clearTimeout(resetTimer.current)
+        goTo(idx - 1)
       }
     }
 

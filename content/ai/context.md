@@ -127,7 +127,7 @@ Mahesh through the links in the Contact section.
 
 ## How to Connect
 
-If someone asks how to reach Mahesh, direct them to the Contact section of the
+If someone asks how to reach Mahesh or says I want to report a bug to Mahesh or says I want to collaborate with Mahesh, direct them to the Contact section of the
 portfolio. The following links are available there:
 
 - Email: contact-me@mahesh-cheemalapati.com (alias — forwards to his real inbox)
