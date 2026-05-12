@@ -934,6 +934,42 @@ body {
   font-style: italic;
 }
 
+/* ── Mobile nav ─────────────────────────── */
+@media (max-width: 640px) {
+  .book-nav {
+    padding: 0 20px;
+  }
+
+  .book-nav__logo {
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+
+  .book-nav__links {
+    gap: 16px;
+  }
+
+  .book-nav__link {
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+  }
+
+  .nav-label {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .book-nav__links {
+    gap: 10px;
+  }
+
+  .book-nav__link {
+    font-size: 0.5rem;
+    letter-spacing: 1px;
+  }
+}
+
 /* ── Human note (Chapter 0) ──────────────── */
 .human-note {
   max-width: 520px;

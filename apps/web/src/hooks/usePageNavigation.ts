@@ -39,11 +39,13 @@ export function usePageNavigation(
   const accDelta = useRef(0)
   const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const touchStartY = useRef(0)
+  const touchStartX = useRef(0)
   const getActiveElRef = useRef(getActiveEl)
   const isFlippingRef = useRef(false)
   const postFlipCooldown = useRef(false)
   const lastFlipTime = useRef(0)
   const lastFlipDir = useRef(0)
+  const isTouchNav = useRef(false)
 
   // Keep getActiveEl ref current without triggering effect re-registration
   useEffect(() => {
@@ -74,13 +76,16 @@ export function usePageNavigation(
 
       navigateTo(index)
 
+      const cooldown = isTouchNav.current ? 250 : POST_FLIP_COOLDOWN_MS
+      isTouchNav.current = false
+
       setTimeout(() => {
         isFlippingRef.current = false
         postFlipCooldown.current = true
         setTimeout(() => {
           postFlipCooldown.current = false
           accDelta.current = 0
-        }, POST_FLIP_COOLDOWN_MS)
+        }, cooldown)
       }, FLIP_LOCK_MS)
     }
 
@@ -138,18 +143,28 @@ export function usePageNavigation(
     }
 
     const handleTouchStart = (e: TouchEvent): void => {
-      touchStartY.current = e.touches[0]?.clientY ?? 0
+      if (e.touches.length !== 1) return
+      touchStartY.current = e.touches[0].clientY
+      touchStartX.current = e.touches[0].clientX
     }
 
     const handleTouchEnd = (e: TouchEvent): void => {
-      const endY = e.changedTouches[0]?.clientY ?? 0
-      const diff = touchStartY.current - endY
-      if (Math.abs(diff) < 50) return
+      if (isFlippingRef.current || postFlipCooldown.current) return
+      if (e.changedTouches.length !== 1) return
+
+      const dy = touchStartY.current - (e.changedTouches[0]?.clientY ?? 0)
+      const dx = touchStartX.current - (e.changedTouches[0]?.clientX ?? 0)
+
+      const isVertical = Math.abs(dy) > Math.abs(dx)
+      if (!isVertical || Math.abs(dy) < 52) return
+
       const el = getActiveElRef.current()
-      if (diff > 0 && !isAtBottom(el)) return
-      if (diff < 0 && !isAtTop(el)) return
+      if (dy > 0 && !isAtBottom(el)) return
+      if (dy < 0 && !isAtTop(el)) return
+
       const idx = currentPage.get()
-      goTo(diff > 0 ? idx + 1 : idx - 1)
+      isTouchNav.current = true
+      goTo(dy > 0 ? idx + 1 : idx - 1)
     }
 
     window.addEventListener('wheel', handleWheel, { passive: false })

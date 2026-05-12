@@ -64,7 +64,7 @@ export default function BookClient() {
               onClick={() => navigateTo(ch.id)}
               aria-current={page === ch.id ? 'page' : undefined}
             >
-              {ch.navLabel}
+              <span className="nav-label">{ch.navLabel}</span>
             </button>
           </li>
         ))}

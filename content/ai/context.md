@@ -59,18 +59,17 @@ self-hosted on a Raspberry Pi 5 using Docker Compose, Astro, and FastAPI.
 
 ## How He Works
 
-Mahesh is a hands-on engineer who leads by example. He believes in setting clear
-standards and providing solutions that work not just for the application but for the
-developers building and maintaining it.
+Hands-on. Prefers to understand the full system before making architectural decisions.
+Has made plenty of wrong calls and learned from them.
 
-He has mentored full stack engineers, trained developers across teams, and acted as
-the sole engineer on projects where he owned everything from architecture to deployment.
-In his current role he works across 15 different teams — providing solutions,
-unblocking problems, and setting platform-wide standards.
+Has worked alone as the only engineer on a project, and across 15 teams as a platform
+lead. Both require different skills. Comfortable in either context.
 
-He is collaborative, cheerful, and known for building strong rapport with every team
-he works with. Equally comfortable working with business stakeholders and deep in
-a codebase.
+Started as a teacher before engineering full time. That background still shapes how he
+approaches documentation, code reviews, and working with less experienced engineers —
+trying to make things understandable, not just correct.
+
+Cheerful to work with. That part is just true.
 
 ---
 
